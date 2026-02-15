@@ -4,7 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-An MCP (Model Context Protocol) server that exposes Redmine REST API operations as tools. It allows coding agents like Claude Code to read and write Redmine issues, projects, and master data via stdio transport.
+Redmine REST API を MCP (Model Context Protocol) ツールとして公開するサーバー。
+Claude Code 等のコーディングエージェントが stdio 経由で Redmine を操作できる。
+
+## Directory Structure
+
+```
+mcp-redmine/
+├── docs/                  # 要求・仕様・設計ドキュメント
+│   ├── requirements.md    #   機能要件と改善候補の整理
+│   └── architecture.md    #   アーキテクチャ詳細
+├── scratch/               # 一時的な開発用ファイル（gitignored）
+│   └── .gitkeep           #   実験コード・メモ・ドラフト等に使用
+├── src/redmine_mcp/       # プロダクションコード
+│   ├── server.py          #   FastMCP インスタンス + ツール登録
+│   ├── client.py          #   RedmineClient（httpx ラッパー）
+│   └── tools/             #   ツールモジュール群
+│       ├── issues.py      #     チケット操作
+│       ├── projects.py    #     プロジェクト操作
+│       └── master.py      #     マスタデータ参照
+├── tests/                 # テスト
+├── main.py                # エントリーポイント
+└── pyproject.toml         # プロジェクト設定
+```
+
+### ディレクトリの使い分け
+
+- **docs/**: 要件定義・仕様・設計を整理する場所。新機能を検討する際はまず `docs/requirements.md` に要件を追記する。
+- **scratch/**: 一時的な実験・メモ・ドラフトの置き場。Git にコミットされない。自由に使って良い。
+- **src/**: プロダクションコード。変更は必ずテストを伴う。
+- **tests/**: テストコード。
 
 ## Commands
 
@@ -12,7 +41,7 @@ An MCP (Model Context Protocol) server that exposes Redmine REST API operations 
 # Install dependencies
 uv sync
 
-# Run tests (requires env vars since server module imports RedmineClient at module level)
+# Run tests
 REDMINE_URL=https://redmine.example.com REDMINE_API_KEY=test-key uv run pytest tests/ -v
 
 # Run a single test
@@ -25,24 +54,20 @@ REDMINE_URL=https://your-redmine.example.com REDMINE_API_KEY=your-key uv run pyt
 REDMINE_URL=https://your-redmine.example.com REDMINE_API_KEY=your-key mcp dev main.py
 ```
 
-## Architecture
+## Architecture Overview
 
-**Entry point**: `main.py` imports the FastMCP instance from `server.py` and runs it with stdio transport.
+詳細は [docs/architecture.md](docs/architecture.md) を参照。
 
-**Server assembly** (`src/redmine_mcp/server.py`): Creates the FastMCP instance and a single `RedmineClient`, then calls `register(mcp, client)` on each tool module. This is where all wiring happens.
-
-**API client** (`src/redmine_mcp/client.py`): `RedmineClient` wraps httpx with async `get/post/put/delete` methods. Reads `REDMINE_URL` and `REDMINE_API_KEY` from env vars at construction time. Adds `X-Redmine-API-Key` header automatically.
-
-**Tool modules** (`src/redmine_mcp/tools/`): Each module exports a `register(mcp, client)` function that defines `@mcp.tool()` decorated async functions as closures over the shared client. Three modules:
-- `issues.py` — list, get, search, create, update, comment, bulk update
-- `projects.py` — list, get
-- `master.py` — statuses, trackers, priorities, users
+- **Entry point**: `main.py` → `server.py` の FastMCP を stdio で起動
+- **Server**: `server.py` が RedmineClient とツールモジュールを組み立て
+- **Client**: `client.py` が httpx で Redmine API と通信
+- **Tools**: 各モジュールが `register(mcp, client)` パターンでツールを登録
 
 ### Adding a new tool
 
-1. Add an async function decorated with `@mcp.tool()` inside the `register()` function of the appropriate tool module
-2. The function receives the shared `RedmineClient` via closure
-3. If creating a new tool module, add a `register()` function and call it from `server.py`
+1. 適切なツールモジュール内の `register()` に `@mcp.tool()` 付き非同期関数を追加
+2. 新モジュールの場合は `register()` を定義し `server.py` から呼び出す
+3. 詳細は [docs/architecture.md](docs/architecture.md) のツール追加手順を参照
 
 ## Configuration
 
