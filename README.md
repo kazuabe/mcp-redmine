@@ -106,7 +106,26 @@ uv sync
 
 ## 環境変数
 
-| 変数名 | 説明 |
-|--------|------|
-| `REDMINE_URL` | RedmineのベースURL |
-| `REDMINE_API_KEY` | RedmineのAPIキー（個人設定 → APIアクセスキーから取得） |
+| 変数名 | 必須 | 説明 |
+|--------|------|------|
+| `REDMINE_URL` | Yes | RedmineのベースURL |
+| `REDMINE_API_KEY` | Yes | RedmineのAPIキー（個人設定 → APIアクセスキーから取得） |
+| `MCP_TRANSPORT` | No | トランスポート種別: `stdio`（デフォルト）または `sse` |
+| `MCP_HOST` | No | SSE時のホスト（デフォルト: `0.0.0.0`） |
+| `MCP_PORT` | No | SSE時のポート（デフォルト: `8000`） |
+
+## SSE トランスポート
+
+stdio の代わりに SSE (Server-Sent Events) トランスポートで起動できます。
+
+```bash
+# SSEモードで起動
+REDMINE_URL=https://your-redmine.example.com REDMINE_API_KEY=your-key MCP_TRANSPORT=sse uv run python main.py
+# → http://localhost:8000/sse でアクセス可能
+```
+
+ホストやポートを変更する場合:
+
+```bash
+MCP_TRANSPORT=sse MCP_HOST=127.0.0.1 MCP_PORT=3000 uv run python main.py
+```
