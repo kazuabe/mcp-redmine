@@ -13,5 +13,6 @@ async def test_tools_registered():
         "bulk_update_issues",
         "list_projects", "get_project",
         "list_statuses", "list_trackers", "list_priorities", "list_users",
+        "list_wiki_pages", "get_wiki_page", "get_ticket_rules",
     }
     assert expected.issubset(tool_names), f"Missing tools: {expected - tool_names}"
