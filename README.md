@@ -34,19 +34,48 @@
 
 ## セットアップ
 
-### 必要環境
+### 方法1: Docker（推奨）
+
+Python や uv のインストールが不要です。
+
+```bash
+docker build -t redmine-mcp-server .
+```
+
+#### Claude Codeでの設定例（Docker）
+
+`.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "redmine": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-e", "REDMINE_URL", "-e", "REDMINE_API_KEY", "redmine-mcp-server"],
+      "env": {
+        "REDMINE_URL": "https://your-redmine.example.com",
+        "REDMINE_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### 方法2: ローカル実行
+
+#### 必要環境
 
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/)
 - REST APIが有効化されたRedmine環境
 
-### インストール
+#### インストール
 
 ```bash
 uv sync
 ```
 
-### Claude Codeでの設定例
+#### Claude Codeでの設定例（ローカル）
 
 `.claude/settings.json`:
 
