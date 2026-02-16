@@ -32,6 +32,16 @@
 | `list_priorities` | 優先度一覧 |
 | `list_users` | ユーザー一覧（管理者権限が必要） |
 
+### Wiki
+
+| ツール名 | 説明 |
+|---------|------|
+| `list_wiki_pages` | プロジェクトのWikiページ一覧取得 |
+| `get_wiki_page` | Wikiページの内容取得 |
+| `get_ticket_rules` | チケット起票ルール取得（`TicketRules`ページ） |
+
+> **起票ルールの運用方法**: プロジェクトのWikiに`TicketRules`ページを作成すると、エージェントがチケット作成前にルールを参照します。記載規約の詳細は [docs/wiki-convention.md](docs/wiki-convention.md) を参照してください。
+
 ## セットアップ
 
 ### 方法1: Docker（推奨）

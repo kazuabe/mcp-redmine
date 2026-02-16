@@ -13,7 +13,8 @@ Claude Code 等のコーディングエージェントが stdio 経由で Redmin
 mcp-redmine/
 ├── docs/                  # 要求・仕様・設計ドキュメント
 │   ├── requirements.md    #   機能要件と改善候補の整理
-│   └── architecture.md    #   アーキテクチャ詳細
+│   ├── architecture.md    #   アーキテクチャ詳細
+│   └── wiki-convention.md #   Wiki起票ルール記載規約
 ├── scratch/               # 一時的な開発用ファイル（gitignored）
 │   └── .gitkeep           #   実験コード・メモ・ドラフト等に使用
 ├── src/redmine_mcp/       # プロダクションコード
@@ -22,7 +23,8 @@ mcp-redmine/
 │   └── tools/             #   ツールモジュール群
 │       ├── issues.py      #     チケット操作
 │       ├── projects.py    #     プロジェクト操作
-│       └── master.py      #     マスタデータ参照
+│       ├── master.py      #     マスタデータ参照
+│       └── wiki.py        #     Wiki操作・起票ルール参照
 ├── tests/                 # テスト
 ├── main.py                # エントリーポイント
 └── pyproject.toml         # プロジェクト設定
