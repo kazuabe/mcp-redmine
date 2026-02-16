@@ -15,7 +15,8 @@ src/redmine_mcp/
 └── tools/
     ├── issues.py               # チケット操作ツール
     ├── projects.py             # プロジェクト操作ツール
-    └── master.py               # マスタデータ参照ツール
+    ├── master.py               # マスタデータ参照ツール
+    └── wiki.py                 # Wiki 操作ツール
 ```
 
 ## データフロー
@@ -51,6 +52,7 @@ Claude Code  ──stdio──▶  FastMCP Server  ──▶  RedmineClient  ─
 | `issues.py` | list, get, search, create, update, comment, bulk update |
 | `projects.py` | list, get |
 | `master.py` | statuses, trackers, priorities, users |
+| `wiki.py` | list pages, get page, get ticket rules |
 
 ## ツール追加手順
 
