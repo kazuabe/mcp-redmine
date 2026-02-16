@@ -22,14 +22,18 @@ src/redmine_mcp/
 ## データフロー
 
 ```
-Claude Code  ──stdio──▶  FastMCP Server  ──▶  RedmineClient  ──HTTP──▶  Redmine API
+                         ┌─ stdio ─┐
+Claude Code / MCP Client ┤         ├▶  FastMCP Server  ──▶  RedmineClient  ──HTTP──▶  Redmine API
+                         └─ SSE  ──┘
 ```
+
+トランスポートは環境変数 `MCP_TRANSPORT` で切り替え（デフォルト: `stdio`）。
 
 ## 主要コンポーネント
 
 ### エントリーポイント (`main.py`)
 
-`server.py` から FastMCP インスタンスをインポートし、stdio トランスポートで起動する。
+`server.py` から FastMCP インスタンスをインポートし、`MCP_TRANSPORT` 環境変数に応じて stdio または SSE トランスポートで起動する。
 
 ### サーバー組み立て (`src/redmine_mcp/server.py`)
 
@@ -66,3 +70,6 @@ Claude Code  ──stdio──▶  FastMCP Server  ──▶  RedmineClient  ─
 |--------|------|------|
 | `REDMINE_URL` | Yes | Redmine のベース URL |
 | `REDMINE_API_KEY` | Yes | API 認証キー |
+| `MCP_TRANSPORT` | No | トランスポート種別: `stdio`（デフォルト）または `sse` |
+| `MCP_HOST` | No | SSE 時のホスト（デフォルト: `0.0.0.0`） |
+| `MCP_PORT` | No | SSE 時のポート（デフォルト: `8000`） |

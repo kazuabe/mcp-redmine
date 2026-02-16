@@ -76,3 +76,8 @@ REDMINE_URL=https://your-redmine.example.com REDMINE_API_KEY=your-key mcp dev ma
 Environment variables (required at startup):
 - `REDMINE_URL` — Base URL of the Redmine instance
 - `REDMINE_API_KEY` — API key for authentication
+
+Optional (transport):
+- `MCP_TRANSPORT` — `stdio`（デフォルト）または `sse`
+- `MCP_HOST` — SSE 時のホスト（デフォルト: `0.0.0.0`）
+- `MCP_PORT` — SSE 時のポート（デフォルト: `8000`）
